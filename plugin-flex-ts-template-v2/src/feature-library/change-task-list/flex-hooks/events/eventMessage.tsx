@@ -22,12 +22,10 @@ export const eventHook = async function verifyAuthorMessage(
   console.log('auth ', process.env.TWILIO_AUTH_TOKEN);
 
   try {
-    const response = await axios.get(`https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`, {
-      auth: {
-        username: '',
-        password: '',
-      },
-    });
+    const response = await axios.get(
+      `https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`,
+      {},
+    );
 
     const messages = response.data.messages;
 
