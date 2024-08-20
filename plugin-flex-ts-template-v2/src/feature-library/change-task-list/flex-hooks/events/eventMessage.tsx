@@ -18,9 +18,6 @@ export const eventHook = async function verifyAuthorMessage(
   let author;
   let timestamp;
 
-  console.log('sid ', process.env.TWILIO_ACCOUNT_SID);
-  console.log('auth ', process.env.TWILIO_AUTH_TOKEN);
-
   try {
     const response = await axios.get(
       `https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`,
