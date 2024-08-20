@@ -19,8 +19,8 @@ export const eventHook = async function verifyAuthorMessage(
   try {
     const response = await axios.get(`https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`, {
       auth: {
-        username: 'AC7fb66fe355c0478db15a89663514c807',
-        password: '8662292da94380f1a35c374ea2a56d5c',
+        username: '<Your Account ID>',
+        password: '<Your Auth Token>',
       },
     });
 
