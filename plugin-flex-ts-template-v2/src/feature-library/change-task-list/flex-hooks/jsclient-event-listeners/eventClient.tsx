@@ -6,30 +6,31 @@ import { FlexJsClient, ConversationEvent } from '../../../../types/feature-loade
 
 export const clientName = FlexJsClient.conversationsClient;
 export const eventName = ConversationEvent.conversationJoined;
-export const jsClientHook = async function messageClient(
+export const jsClientHook = async function VerifyMessages(
   flex: typeof Flex,
   manager: Flex.Manager,
   conversation: Conversation,
+  task: Flex.ITask,
 ) {
   const color = new ChangeColor();
+  const taskStatus = task?.taskStatus;
 
   try {
     conversation.on('messageAdded', (message) => {
       const author = message.author;
-      const timestamp = message.dateCreated;
 
-      if (author === null || author.startsWith('whatsapp')) {
-        console.log('Cor Verde!');
-        color.changeColor('#85C1A7');
-        changeColorTaskItem(color.getColor());
+      if (taskStatus === 'assigned') {
+        if (author === null || author.startsWith('whatsapp')) {
+          color.changeColor('#85C1A7');
+          changeColorTaskItem(color.getColor());
 
-        setTimeout(alertYellow, 240000);
+          setTimeout(alertYellow, 240000);
 
-        setTimeout(alertRed, 480000);
-      } else {
-        console.log('Cor Default!');
-        color.changeColor('#F4F4F6');
-        changeColorTaskItem(color.getColor());
+          setTimeout(alertRed, 480000);
+        } else {
+          color.changeColor('#F4F4F6');
+          changeColorTaskItem(color.getColor());
+        }
       }
     });
   } catch (error) {
@@ -37,13 +38,11 @@ export const jsClientHook = async function messageClient(
   }
 
   function alertYellow() {
-    console.log('Cor mudou para amarelo!');
     color.changeColor('#F0E74A');
     changeColorTaskItem(color.getColor());
   }
 
   function alertRed() {
-    console.log('Cor mudou para vermelho!');
     color.changeColor('#D63335');
     changeColorTaskItem(color.getColor());
   }

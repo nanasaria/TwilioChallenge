@@ -12,17 +12,17 @@ export const eventHook = async function verifyAuthorMessage(
 ) {
   const conversationSID = task?.attributes?.conversationSid;
   const color = new ChangeColor();
-  const atributosTask = task?.attributes;
-  console.log('atributos aqui ', atributosTask);
+  const taskStatus = task?.taskStatus;
 
   let author;
-  let timestamp;
 
   try {
-    const response = await axios.get(
-      `https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`,
-      {},
-    );
+    const response = await axios.get(`https://conversations.twilio.com/v1/Conversations/${conversationSID}/Messages`, {
+      auth: {
+        username: '',
+        password: '',
+      },
+    });
 
     const messages = response.data.messages;
 
@@ -33,33 +33,35 @@ export const eventHook = async function verifyAuthorMessage(
 
     const lastMessage = messages[messages.length - 1];
     author = lastMessage.author;
-    timestamp = lastMessage.date_created;
   } catch (error) {
     console.error('Erro ao buscar mensagens:', error);
   }
 
-  if (author.startsWith('whatsapp')) {
-    console.log('Cliente enviou mensagem, COR VERDE');
-    color.changeColor('#85C1A7');
-    changeColorTaskItem(color.getColor());
+  if (taskStatus === 'assigned') {
+    if (author.startsWith('whatsapp')) {
+      color.changeColor('#85C1A7');
+      changeColorTaskItem(color.getColor());
 
-    setTimeout(alertYellow, 240000);
+      setTimeout(alertYellow, 240000);
 
-    setTimeout(alertRed, 480000);
+      setTimeout(alertRed, 480000);
+    } else {
+      console.log('Atendente enviou mensagem e não teve retorno do cliente.');
+      color.changeColor('#F4F4F6');
+      changeColorTaskItem(color.getColor());
+    }
   } else {
-    console.log('Atendente enviou mensagem e não teve retorno do cliente.');
+    console.log('Task não foi aceita.');
     color.changeColor('#F4F4F6');
     changeColorTaskItem(color.getColor());
   }
 
   function alertYellow() {
-    console.log('Cor mudou para amarelo!');
     color.changeColor('#F0E74A');
     changeColorTaskItem(color.getColor());
   }
 
   function alertRed() {
-    console.log('Cor mudou para vermelho!');
     color.changeColor('#D63335');
     changeColorTaskItem(color.getColor());
   }
